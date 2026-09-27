@@ -10,6 +10,7 @@ async function main() {
   const { WebSocketServer } = await import("ws");
   const { handleConnection } = await import("./server/rooms");
   const { pipePreview } = await import("./server/preview");
+  const { suggest } = await import("./server/suggest");
 
   const port = Number(process.env.PORT) || 3000;
   const hostname = "0.0.0.0";
@@ -20,6 +21,20 @@ async function main() {
 
   const server = createServer((req, res) => {
     const parsed = parse(req.url || "", true);
+    if (parsed.pathname === "/api/suggest") {
+      const raw = Array.isArray(parsed.query.q) ? parsed.query.q[0] : parsed.query.q;
+      suggest(raw || "")
+        .then((results) => {
+          res.setHeader("content-type", "application/json; charset=utf-8");
+          res.setHeader("cache-control", "no-store");
+          res.end(JSON.stringify(results));
+        })
+        .catch(() => {
+          if (!res.headersSent) res.statusCode = 502;
+          if (!res.writableEnded) res.end();
+        });
+      return;
+    }
     if (parsed.pathname === "/api/preview") {
       const token = Array.isArray(parsed.query.token) ? parsed.query.token[0] : parsed.query.token;
       if (!token) {

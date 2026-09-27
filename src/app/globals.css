@@ -301,6 +301,93 @@ button.start {
   border-color: #5c5c5c;
 }
 
+.suggest {
+  width: 100%;
+  max-height: min(320px, 42vh);
+  overflow: auto;
+  border: 1px solid #fff;
+  border-top: 0;
+  background: #000;
+  text-align: left;
+}
+
+.suggest-label {
+  padding: 0.7rem 0.9rem 0.25rem;
+  color: #6f6f6f;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+}
+
+.suggest-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.9rem;
+  border: 0;
+  border-top: 1px solid #1c1c1c;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  text-align: left;
+  font-size: 15px;
+}
+
+.suggest-row img,
+.suggest-mark {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  object-fit: cover;
+  filter: grayscale(1);
+  background: #111;
+}
+
+.suggest-mark {
+  display: grid;
+  place-items: center;
+  border: 1px solid #3a3a3a;
+  color: #8a8a8a;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+
+.suggest-row span {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.suggest-name,
+.suggest-detail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.suggest-name {
+  letter-spacing: 0.03em;
+}
+
+.suggest-detail {
+  color: #8a8a8a;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.suggest-row.on,
+.suggest-row.on:hover,
+.suggest-row:hover {
+  background: #fff;
+  color: #000;
+}
+
+.suggest-row.on .suggest-detail,
+.suggest-row:hover .suggest-detail,
+.suggest-row.on .suggest-mark,
+.suggest-row:hover .suggest-mark {
+  color: #3a3a3a;
+}
+
 .nomatch {
   min-height: 1.2em;
 }
