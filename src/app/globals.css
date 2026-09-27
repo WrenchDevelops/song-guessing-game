@@ -605,18 +605,37 @@ button.start {
     width: 100%;
   }
 
+  .host,
+  fieldset {
+    align-items: stretch;
+  }
+
   .host {
     gap: 1.15rem;
   }
 
-  .choices {
+  fieldset {
     width: 100%;
   }
 
+  .choices {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .host fieldset:nth-child(1) .choices {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .host fieldset:nth-child(3) .choices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .choices button {
-    flex: 1 1 calc(33.33% - 0.6rem);
+    width: 100%;
     min-width: 0;
-    padding: 0.85rem 0.55rem;
+    padding: 0.85rem 0.4rem;
   }
 
   .room-code {
@@ -685,6 +704,7 @@ button.start {
   }
 
   .guess-form {
+    position: relative;
     min-height: 0;
     margin-top: auto;
   }
@@ -695,7 +715,14 @@ button.start {
   }
 
   .suggest {
-    max-height: min(220px, 34dvh);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    z-index: 3;
+    max-height: min(240px, 46dvh);
+    border-top: 1px solid #fff;
+    border-bottom: 0;
     -webkit-overflow-scrolling: touch;
   }
 
