@@ -1,5 +1,7 @@
 const dev = process.argv.includes("--dev");
-process.env.NODE_ENV ??= dev ? "development" : "production";
+if (!process.env.NODE_ENV) {
+  Object.assign(process.env, { NODE_ENV: dev ? "development" : "production" });
+}
 
 async function main() {
   const { createServer } = await import("node:http");

@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import type { WebSocket } from "ws";
+import { WebSocket } from "ws";
 import { isCorrectGuess } from "../src/lib/normalize";
 import { pointsForGuess } from "../src/lib/scoring";
 import {
