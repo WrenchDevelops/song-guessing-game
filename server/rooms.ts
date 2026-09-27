@@ -1,13 +1,15 @@
 import { randomBytes } from "node:crypto";
 import { WebSocket } from "ws";
-import { isCorrectGuess } from "../src/lib/normalize";
+import { isCorrectGuess, normalizeAnswer } from "../src/lib/normalize";
 import { pointsForGuess } from "../src/lib/scoring";
 import {
   CATEGORIES,
   DEFAULT_SETTINGS,
   DURATIONS,
   ROUNDS,
+  type AnswerMode,
   type Category,
+  type Choice,
   type ClientMessage,
   type DurationSec,
   type GameSnapshot,
@@ -32,6 +34,7 @@ interface Player {
   score: number;
   ws: WebSocket | null;
   solved: boolean;
+  picked: string | null;
   roundPoints: number;
   leaveTimer: ReturnType<typeof setTimeout> | null;
 }
@@ -48,6 +51,7 @@ interface Room {
   durationMs: number;
   timer: ReturnType<typeof setTimeout> | null;
   current: Song | null;
+  choices: Choice[];
   previewToken: string | null;
   starting: boolean;
 }
@@ -132,6 +136,8 @@ function snapshotFor(room: Room, player: Player, leaderboard: LeaderboardEntry[]
     startedAt: room.startedAt,
     serverNow: Date.now(),
     previewToken: playing ? room.previewToken : null,
+    choices: playing && room.settings.answer === "choice" ? room.choices : null,
+    yourPick: player.picked,
     youSolved: player.solved,
     solvers: [...room.players.values()]
       .filter((entry) => entry.solved)
@@ -160,6 +166,7 @@ function broadcast(room: Room) {
 function resetRoundFlags(room: Room) {
   for (const player of room.players.values()) {
     player.solved = false;
+    player.picked = null;
     player.roundPoints = 0;
   }
 }
@@ -169,6 +176,7 @@ function beginRound(room: Room) {
   if (!song) {
     room.phase = "final";
     room.current = null;
+    room.choices = [];
     room.previewToken = null;
     broadcast(room);
     return;
@@ -176,6 +184,7 @@ function beginRound(room: Room) {
 
   resetRoundFlags(room);
   room.current = song;
+  room.choices = room.settings.answer === "choice" ? buildChoices(room, song) : [];
   room.previewToken = issuePreview(song.previewUrl);
   room.startedAt = Date.now() + ARM_MS;
   room.phase = "playing";
@@ -231,6 +240,7 @@ function createPlayer(name: string): Player {
     score: 0,
     ws: null,
     solved: false,
+    picked: null,
     roundPoints: 0,
     leaveTimer: null,
   };
@@ -256,10 +266,12 @@ function parseSettings(value: unknown): Settings | null {
   if (!(ROUNDS as readonly number[]).includes(raw.rounds)) return null;
   if (!(DURATIONS as readonly number[]).includes(raw.durationSec)) return null;
   if (!(CATEGORIES as readonly string[]).includes(raw.category)) return null;
+  const answer: AnswerMode = raw.answer === "choice" ? "choice" : "type";
   return {
     rounds: raw.rounds as Rounds,
     durationSec: raw.durationSec as DurationSec,
     category: raw.category as Category,
+    answer,
   };
 }
 
@@ -316,11 +328,31 @@ async function startGame(room: Room, ws: WebSocket) {
   }
 }
 
+function shuffle<T>(items: T[]): T[] {
+  const copy = [...items];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swap = Math.floor(Math.random() * (index + 1));
+    const current = copy[index];
+    copy[index] = copy[swap];
+    copy[swap] = current;
+  }
+  return copy;
+}
+
+function buildChoices(room: Room, song: Song): Choice[] {
+  const correct = normalizeAnswer(song.title);
+  const decoys = shuffle(room.songs.filter((entry) => normalizeAnswer(entry.title) !== correct)).slice(0, 3);
+  return shuffle([song, ...decoys]).map((entry) => ({ title: entry.title, artist: entry.artist }));
+}
+
 function guess(room: Room, player: Player, text: string) {
-  if (room.phase !== "playing" || !room.current || player.solved) return;
+  if (room.phase !== "playing" || !room.current || player.solved || player.picked) return;
   const attempt = text.slice(0, 80);
+  const choiceRound = room.settings.answer === "choice";
+  if (choiceRound) player.picked = attempt;
   if (!isCorrectGuess(attempt, room.current.title, room.current.artist)) {
     send(player.ws, { type: "guess_result", playerId: player.id, playerName: player.name, correct: false });
+    if (choiceRound) broadcast(room);
     return;
   }
 
@@ -347,6 +379,7 @@ function returnToLobby(room: Room) {
   for (const player of room.players.values()) {
     player.score = 0;
     player.solved = false;
+    player.picked = null;
     player.roundPoints = 0;
   }
   broadcast(room);
@@ -371,6 +404,7 @@ function onMessage(ws: WebSocket, message: ClientMessage) {
       durationMs: DEFAULT_SETTINGS.durationSec * 1000,
       timer: null,
       current: null,
+      choices: [],
       previewToken: null,
       starting: false,
     };

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { unlockAudio } from "@/lib/audio";
 import { formatClock } from "@/lib/format";
-import type { Solver } from "@/lib/types";
+import type { Choice, Solver } from "@/lib/types";
 import { BinaryVisualizer } from "./BinaryVisualizer";
 import { GuessInput } from "./GuessInput";
 
@@ -18,6 +18,8 @@ interface GameRoundProps {
   solvers: Solver[];
   youId: string;
   rejectNonce: number;
+  choices: Choice[] | null;
+  yourPick: string | null;
   onGuess: (text: string) => void;
 }
 
@@ -32,6 +34,8 @@ export function GameRound({
   solvers,
   youId,
   rejectNonce,
+  choices,
+  yourPick,
   onGuess,
 }: GameRoundProps) {
   const offsetRef = useRef(clockOffset);
@@ -140,7 +144,17 @@ export function GameRound({
           CORRECT
         </p>
       )}
-      {mode === "search" && <GuessInput rejectNonce={rejectNonce} onSubmit={onGuess} />}
+      {choices && choices.length > 0 ? (
+        <ChoiceSquares
+          choices={choices}
+          yourPick={yourPick}
+          youSolved={youSolved}
+          rejectNonce={rejectNonce}
+          onGuess={onGuess}
+        />
+      ) : (
+        mode === "search" && <GuessInput rejectNonce={rejectNonce} onSubmit={onGuess} />
+      )}
       {arm && mode === "search" && (
         <button
           type="button"
@@ -158,5 +172,48 @@ export function GameRound({
         </p>
       ))}
     </main>
+  );
+}
+
+function ChoiceSquares({
+  choices,
+  yourPick,
+  youSolved,
+  rejectNonce,
+  onGuess,
+}: {
+  choices: Choice[];
+  yourPick: string | null;
+  youSolved: boolean;
+  rejectNonce: number;
+  onGuess: (text: string) => void;
+}) {
+  const [sent, setSent] = useState<string | null>(null);
+  const picked = yourPick || sent;
+  const missed = Boolean(picked) && !youSolved && rejectNonce > 0;
+
+  return (
+    <div className="squares">
+      {choices.map((choice) => {
+        const selected = picked === choice.title;
+        const className = ["square", selected && !missed ? "on" : "", selected && missed ? "miss" : ""].filter(Boolean).join(" ");
+        return (
+          <button
+            key={choice.title}
+            type="button"
+            className={className}
+            disabled={Boolean(picked)}
+            onClick={() => {
+              if (picked) return;
+              setSent(choice.title);
+              onGuess(choice.title);
+            }}
+          >
+            <span className="square-title">{choice.title}</span>
+            <span className="square-artist">{choice.artist}</span>
+          </button>
+        );
+      })}
+    </div>
   );
 }

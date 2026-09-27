@@ -52,7 +52,7 @@ export function Lobby({ code, players, settings, youAreHost, starting, error, on
       ) : (
         <div>
           <p className="hint">
-            {settings.rounds} ROUNDS · {settings.category} · {settings.durationSec} SEC
+            {settings.rounds} ROUNDS · {settings.category} · {settings.durationSec} SEC · {settings.answer === "choice" ? "4 CHOICE" : "TYPE"}
           </p>
           <p className="wait">WAITING FOR HOST...</p>
         </div>

@@ -1,22 +1,31 @@
 export const ROUNDS = [5, 10, 15, 20] as const;
 export const DURATIONS = [10, 15, 20] as const;
 export const CATEGORIES = ["ALL", "POP", "RAP", "ROCK", "2000s", "2010s", "2020s"] as const;
+export const ANSWERS = ["type", "choice"] as const;
 
 export type Rounds = (typeof ROUNDS)[number];
 export type DurationSec = (typeof DURATIONS)[number];
 export type Category = (typeof CATEGORIES)[number];
+export type AnswerMode = (typeof ANSWERS)[number];
 export type Phase = "lobby" | "playing" | "reveal" | "final";
 
 export interface Settings {
   rounds: Rounds;
   category: Category;
   durationSec: DurationSec;
+  answer: AnswerMode;
+}
+
+export interface Choice {
+  title: string;
+  artist: string;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
   rounds: 10,
   category: "ALL",
   durationSec: 15,
+  answer: "type",
 };
 
 export interface PublicPlayer {
@@ -60,6 +69,8 @@ export interface GameSnapshot {
   startedAt: number;
   serverNow: number;
   previewToken: string | null;
+  choices: Choice[] | null;
+  yourPick: string | null;
   youSolved: boolean;
   solvers: Solver[];
   reveal: RevealPayload | null;

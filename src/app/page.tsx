@@ -56,6 +56,8 @@ export default function Home() {
         solvers={game.solvers}
         youId={snapshot.playerId}
         rejectNonce={game.rejectNonce}
+        choices={snapshot.choices}
+        yourPick={snapshot.yourPick}
         onGuess={game.guess}
       />
     );

@@ -43,6 +43,25 @@ export function HostControls({ settings, disabled, onChange, onStart }: HostCont
         </div>
       </fieldset>
       <fieldset disabled={disabled}>
+        <legend>ANSWER</legend>
+        <div className="choices">
+          <button
+            type="button"
+            className={settings.answer === "type" ? "on" : ""}
+            onClick={() => onChange({ ...settings, answer: "type" })}
+          >
+            TYPE
+          </button>
+          <button
+            type="button"
+            className={settings.answer === "choice" ? "on" : ""}
+            onClick={() => onChange({ ...settings, answer: "choice" })}
+          >
+            4 CHOICE
+          </button>
+        </div>
+      </fieldset>
+      <fieldset disabled={disabled}>
         <legend>ROUND DURATION</legend>
         <div className="choices">
           {DURATIONS.map((durationSec) => (

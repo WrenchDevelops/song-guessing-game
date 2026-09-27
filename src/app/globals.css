@@ -282,6 +282,74 @@ button.start {
   letter-spacing: 0.16em;
 }
 
+.squares {
+  width: min(680px, 94vw);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.square {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 1rem;
+  text-transform: none;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+  white-space: normal;
+}
+
+.square-title,
+.square-artist {
+  max-width: 100%;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.square-title {
+  font-size: clamp(16px, 2.5vw, 24px);
+}
+
+.square-artist {
+  color: #8a8a8a;
+  font-size: clamp(12px, 1.6vw, 14px);
+  letter-spacing: 0.08em;
+  -webkit-line-clamp: 2;
+}
+
+.square.on,
+.square.on:hover,
+.square.on:disabled,
+.square.on:disabled:hover {
+  background: #fff;
+  color: #000;
+  opacity: 1;
+}
+
+.square.on .square-artist,
+.square.on:disabled .square-artist {
+  color: #3a3a3a;
+}
+
+.square.miss,
+.square.miss:disabled,
+.square.miss:disabled:hover {
+  background: #000;
+  color: #fff;
+  opacity: 0.35;
+}
+
+.square:disabled:hover {
+  background: #000;
+  color: #fff;
+}
+
 .guess-form {
   display: flex;
   flex-direction: column;
