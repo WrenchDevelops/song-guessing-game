@@ -1,0 +1,414 @@
+:root {
+  color-scheme: dark;
+  --bg: #000;
+  --fg: #fff;
+  --dim: #8a8a8a;
+  --quiet: #5e5e5e;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100dvh;
+  font-family: var(--font-geist-sans), Inter, "Segoe UI", sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+  border-radius: 0;
+}
+
+button {
+  background: #000;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 0.95rem 1.5rem;
+  font-size: 14px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  button:hover {
+    background: #fff;
+    color: #000;
+  }
+}
+
+button:disabled,
+button:disabled:hover {
+  background: #000;
+  color: #fff;
+  opacity: 0.4;
+  cursor: default;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 1px solid #fff;
+  outline-offset: 4px;
+}
+
+::selection {
+  background: #fff;
+  color: #000;
+}
+
+.stage {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.75rem;
+  padding: 8vh 6vw 10vh;
+  text-align: center;
+}
+
+.stage.round {
+  justify-content: flex-start;
+  padding-top: 9vh;
+  gap: 1.55rem;
+}
+
+h1,
+h2 {
+  font-weight: 500;
+}
+
+h1 {
+  font-size: clamp(44px, 8vw, 92px);
+  letter-spacing: 0.06em;
+  line-height: 0.95;
+}
+
+.kicker {
+  margin-bottom: 0.75rem;
+  color: var(--dim);
+  font-size: 13px;
+  letter-spacing: 0.22em;
+}
+
+.hint {
+  margin-top: 0.4rem;
+  color: var(--dim);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  min-height: 1em;
+}
+
+.wait {
+  margin-top: 1.25rem;
+  color: #d6d6d6;
+  font-size: 14px;
+  letter-spacing: 0.18em;
+}
+
+.actions,
+.form,
+.host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.actions,
+.form {
+  gap: 0.9rem;
+  width: min(420px, 92vw);
+}
+
+.host {
+  gap: 2rem;
+  width: min(680px, 94vw);
+}
+
+fieldset {
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  min-inline-size: 0;
+}
+
+legend {
+  padding: 0;
+  color: var(--dim);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.choices button {
+  min-width: 4.6rem;
+  text-transform: none;
+}
+
+.choices button.on,
+.choices button.on:hover {
+  background: #fff;
+  color: #000;
+}
+
+button.start {
+  min-width: 220px;
+  margin-top: 0.4rem;
+}
+
+.field,
+.guess {
+  background: #000;
+  color: #fff;
+  border: 1px solid #fff;
+  text-align: center;
+  caret-color: #fff;
+}
+
+.field {
+  width: 100%;
+  padding: 0.95rem 1rem;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+}
+
+.code-input {
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+}
+
+.field::placeholder,
+.guess::placeholder {
+  color: var(--quiet);
+}
+
+.room-code {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-family: var(--font-geist-mono), ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: clamp(48px, 8vw, 80px);
+  letter-spacing: 0.16em;
+  line-height: 1;
+}
+
+.room-code:hover,
+.room-code:disabled:hover {
+  background: transparent;
+  color: #fff;
+  opacity: 1;
+}
+
+.players {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  font-size: clamp(18px, 2.4vw, 24px);
+}
+
+.tag {
+  margin-left: 0.75rem;
+  color: #6f6f6f;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+}
+
+.timer,
+.delta,
+.winner .score,
+.room-code {
+  font-variant-numeric: tabular-nums;
+}
+
+.timer {
+  font-family: var(--font-geist-mono), ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: clamp(48px, 8vw, 64px);
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.now {
+  color: #9a9a9a;
+  font-size: 14px;
+  letter-spacing: 0.22em;
+}
+
+.viz {
+  width: min(680px, 92vw);
+  min-height: 8.2em;
+  overflow: hidden;
+  font-family: var(--font-geist-mono), ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: clamp(12px, 1.7vw, 15px);
+  line-height: 1.65;
+  letter-spacing: 0.14em;
+  font-variant-ligatures: none;
+  white-space: pre;
+}
+
+.viz .t0 { color: #4a4a4a; }
+.viz .t1 { color: #8f8f8f; }
+.viz .t2 { color: #fff; }
+
+.viz.found {
+  color: #fff;
+  letter-spacing: 0.16em;
+}
+
+.guess-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(680px, 92vw);
+}
+
+.guess {
+  width: 100%;
+  padding: 1rem 1.1rem;
+  font-size: clamp(18px, 3vw, 32px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.guess.bad {
+  border-color: #5c5c5c;
+}
+
+.nomatch {
+  min-height: 1.2em;
+}
+
+.correct {
+  font-size: clamp(48px, 10vw, 88px);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  line-height: 0.95;
+}
+
+.song-title {
+  max-width: min(920px, 92vw);
+  font-size: clamp(32px, 6vw, 64px);
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.artist {
+  margin-top: 0.8rem;
+  color: #b5b5b5;
+  font-size: clamp(16px, 2vw, 22px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.art {
+  width: min(240px, 62vw);
+  height: min(240px, 62vw);
+  object-fit: cover;
+  background: #111;
+  filter: grayscale(1) contrast(1.05);
+}
+
+.delta {
+  font-size: clamp(22px, 3vw, 32px);
+  letter-spacing: 0.12em;
+}
+
+.board {
+  list-style: none;
+  width: min(460px, 92vw);
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.board li {
+  letter-spacing: 0.06em;
+}
+
+.winner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.winner .rank {
+  color: var(--dim);
+  letter-spacing: 0.22em;
+}
+
+.winner h2 {
+  font-size: clamp(52px, 9vw, 92px);
+  letter-spacing: 0.08em;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.winner .score {
+  font-size: clamp(28px, 4vw, 42px);
+  letter-spacing: 0.08em;
+}
+
+.flash {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.flash.show {
+  animation: soft-flash 500ms ease-out;
+}
+
+@keyframes soft-flash {
+  from { opacity: 0.18; }
+  to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flash.show {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .stage {
+    gap: 2.15rem;
+    padding: 7vh 5vw 8vh;
+  }
+
+  .actions,
+  .actions button,
+  button.start {
+    width: 100%;
+  }
+}
