@@ -68,8 +68,8 @@ export function BinaryVisualizer({ analyser, resolved }: BinaryVisualizerProps) 
       return;
     }
 
-    const columns = Math.max(18, Math.min(42, Math.floor(element.clientWidth / 13) || 28));
-    const rows = element.clientWidth < 560 ? 5 : 7;
+    const columns = Math.max(16, Math.min(42, Math.floor(element.clientWidth / 11) || 28));
+    const rows = element.clientWidth < 720 ? 3 : 7;
     let lines = Array.from({ length: rows }, () => makeLine(columns, 0.2, false));
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const time = analyser ? new Uint8Array(analyser.fftSize) : null;

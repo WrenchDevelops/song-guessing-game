@@ -14,21 +14,31 @@
 
 html,
 body {
-  min-height: 100%;
+  height: 100%;
   background: var(--bg);
   color: var(--fg);
 }
 
 html {
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  min-height: 100dvh;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-family: var(--font-geist-sans), Inter, "Segoe UI", sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overscroll-behavior: none;
+}
+
+button,
+a {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 button,
@@ -555,15 +565,159 @@ button.start {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 720px) {
   .stage {
-    gap: 2.15rem;
-    padding: 7vh 5vw 8vh;
+    min-height: 100%;
+    justify-content: flex-start;
+    gap: 1.35rem;
+    padding:
+      max(1.1rem, env(safe-area-inset-top))
+      max(1rem, env(safe-area-inset-right))
+      max(1.4rem, env(safe-area-inset-bottom))
+      max(1rem, env(safe-area-inset-left));
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-size: clamp(42px, 13vw, 68px);
   }
 
   .actions,
+  .form,
+  .host,
+  .guess-form,
+  .squares,
+  .board {
+    width: 100%;
+  }
+
+  .actions button,
+  button.start,
+  .field,
+  .guess,
+  .choices button,
+  .suggest-row {
+    min-height: 48px;
+  }
+
   .actions button,
   button.start {
     width: 100%;
+  }
+
+  .host {
+    gap: 1.15rem;
+  }
+
+  .choices {
+    width: 100%;
+  }
+
+  .choices button {
+    flex: 1 1 calc(33.33% - 0.6rem);
+    min-width: 0;
+    padding: 0.85rem 0.55rem;
+  }
+
+  .room-code {
+    font-size: clamp(44px, 16vw, 64px);
+    letter-spacing: 0.12em;
+  }
+
+  .stage.round {
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    gap: 0.55rem;
+    padding-top: max(0.7rem, env(safe-area-inset-top));
+    padding-bottom: max(0.7rem, env(safe-area-inset-bottom));
+  }
+
+  .stage.round .kicker {
+    margin-bottom: 0;
+  }
+
+  .timer {
+    font-size: clamp(40px, 12vw, 52px);
+  }
+
+  .now {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+  }
+
+  .viz {
+    width: 100%;
+    min-height: 0;
+    max-height: 3.6em;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    line-height: 1.45;
+  }
+
+  .squares {
+    flex: 1;
+    min-height: 0;
+    gap: 0.5rem;
+  }
+
+  .square {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 72px;
+    padding: 0.55rem;
+    gap: 0.3rem;
+  }
+
+  .square-title {
+    font-size: clamp(14px, 4.2vw, 18px);
+    -webkit-line-clamp: 4;
+  }
+
+  .square-artist {
+    font-size: 11px;
+  }
+
+  .guess {
+    font-size: 18px;
+    padding: 0.9rem 0.8rem;
+  }
+
+  .guess-form {
+    min-height: 0;
+    margin-top: auto;
+  }
+
+  .stage.round > button {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .suggest {
+    max-height: min(220px, 34dvh);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .suggest-row {
+    padding: 0.75rem 0.85rem;
+    font-size: 16px;
+  }
+
+  .correct {
+    font-size: clamp(40px, 14vw, 64px);
+  }
+
+  .song-title {
+    font-size: clamp(28px, 9vw, 44px);
+  }
+
+  .art {
+    width: min(168px, 46vw);
+    height: min(168px, 46vw);
+  }
+
+  .winner h2 {
+    font-size: clamp(40px, 14vw, 68px);
   }
 }
