@@ -8,9 +8,10 @@ const previews = new Map<string, { url: string; exp: number }>();
 function isAllowed(url: string): boolean {
   try {
     const parsed = new URL(url);
+    const deezerPreview = parsed.hostname.endsWith(".dzcdn.net") && parsed.pathname.startsWith("/api/1/");
     return (
       parsed.protocol === "https:" &&
-      (parsed.hostname === "audio-ssl.itunes.apple.com" || parsed.hostname === "audio.itunes.apple.com")
+      (parsed.hostname === "audio-ssl.itunes.apple.com" || parsed.hostname === "audio.itunes.apple.com" || deezerPreview)
     );
   } catch {
     return false;

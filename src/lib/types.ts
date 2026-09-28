@@ -1,6 +1,6 @@
 export const ROUNDS = [5, 10, 15, 20] as const;
 export const DURATIONS = [10, 15, 20] as const;
-export const CATEGORIES = ["ALL", "POP", "RAP", "ROCK", "2000s", "2010s", "2020s"] as const;
+export const CATEGORIES = ["ALL", "POP", "RAP", "ROCK", "2000s", "2010s", "2020s", "PLAYLIST"] as const;
 export const ANSWERS = ["type", "choice"] as const;
 
 export type Rounds = (typeof ROUNDS)[number];

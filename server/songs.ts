@@ -1,5 +1,6 @@
 import type { Category } from "../src/lib/types";
 import { normalizeAnswer } from "../src/lib/normalize";
+import { loadPlaylist } from "./playlist";
 
 export interface Song {
   title: string;
@@ -24,7 +25,7 @@ const ITUNES_SEARCH = "https://itunes.apple.com/search";
 const SKIP = /\b(remix|karaoke|instrumental|commentary|tribute|sped up|slowed)\b|\(live| - live/i;
 const TTL_MS = 10 * 60 * 1000;
 
-const SEARCHES: Record<Category, { terms: string[]; minYear?: number; maxYear?: number; genre?: RegExp }> = {
+const SEARCHES: Record<Exclude<Category, "PLAYLIST">, { terms: string[]; minYear?: number; maxYear?: number; genre?: RegExp }> = {
   ALL: { terms: ["pop", "rap", "rock", "r&b", "indie"] },
   POP: { terms: ["pop", "dance pop", "synthpop", "electropop"], genre: /pop|dance/i },
   RAP: { terms: ["rap", "hip hop", "trap", "hip-hop"], genre: /rap|hip-?hop|trap/i },
@@ -87,7 +88,7 @@ function shuffle<T>(items: T[]): T[] {
   return copy;
 }
 
-async function fetchCategory(category: Category): Promise<Song[]> {
+async function fetchCategory(category: Exclude<Category, "PLAYLIST">): Promise<Song[]> {
   const query = SEARCHES[category];
   const batches = await Promise.all(query.terms.map((term) => search(term).catch(() => [] as Song[])));
   let songs = dedupe(batches.flat());
@@ -202,6 +203,8 @@ const FALLBACK: Song[] = [
 ];
 
 export async function loadSongs(category: Category, count: number): Promise<Song[]> {
+  if (category === "PLAYLIST") return loadPlaylist();
+
   const cached = cache.get(category);
   if (cached && Date.now() - cached.at < TTL_MS && cached.songs.length >= count) {
     return shuffle(cached.songs).slice(0, count);

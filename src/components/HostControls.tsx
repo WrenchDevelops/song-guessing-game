@@ -10,22 +10,27 @@ interface HostControlsProps {
 }
 
 export function HostControls({ settings, disabled, onChange, onStart }: HostControlsProps) {
+  const playlist = settings.category === "PLAYLIST";
   return (
     <div className="host">
-      <fieldset disabled={disabled}>
+      <fieldset disabled={disabled || playlist}>
         <legend>ROUNDS</legend>
-        <div className="choices">
-          {ROUNDS.map((rounds) => (
-            <button
-              key={rounds}
-              type="button"
-              className={settings.rounds === rounds ? "on" : ""}
-              onClick={() => onChange({ ...settings, rounds })}
-            >
-              {rounds}
-            </button>
-          ))}
-        </div>
+        {playlist ? (
+          <p className="hint">EVERY SONG ON THE PLAYLIST</p>
+        ) : (
+          <div className="choices">
+            {ROUNDS.map((rounds) => (
+              <button
+                key={rounds}
+                type="button"
+                className={settings.rounds === rounds ? "on" : ""}
+                onClick={() => onChange({ ...settings, rounds })}
+              >
+                {rounds}
+              </button>
+            ))}
+          </div>
+        )}
       </fieldset>
       <fieldset disabled={disabled}>
         <legend>SONG CATEGORY</legend>
